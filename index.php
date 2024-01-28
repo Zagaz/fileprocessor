@@ -2,13 +2,13 @@
 
 class PriceProcessor{
      private $csvFilePath;
-     private $profitMargin;
+
      private $cad;
 
      // constructor
-     public function __construct($csvFilePath, $profitMargin, $cad){
+     public function __construct($csvFilePath,  $cad){
           $this->csvFilePath = $csvFilePath;
-          $this->profitMargin = $profitMargin;
+
           $this->cad = $cad;
      }
 
@@ -25,10 +25,10 @@ class PriceProcessor{
           }
           fclose($file);
 
-          echo "<pre>";
-          echo "<table>";
+          echo "<table class =  'table table-striped'>";
           // print_r($table);
           // get table first item and make a table row
+          echo '<thead>';
           echo "<tr>";
           foreach($table[0] as $item){
                echo "<th>$item</th>";
@@ -39,9 +39,22 @@ class PriceProcessor{
           for($i = 1; $i < count($table); $i++){
                $data[] = $table[$i];
           }
+          echo '</thead>';
           
           // with each data from $data array make a table row
-          $theTable = "";
+          
+          $theTable = "<tbody class ='table-striped' >";
+
+          ?>
+    
+          <?php 
+          $count = 0;
+          $priceAv = [];
+          $profitMarginAv = [];
+          $qtyTotal = [];
+          $profitTotal = [];
+          $profitTotalCAD = [];
+
           foreach($data as $item){
                $sku = isset($item[0]) ? $item[0] : "N/A";
                $cost = isset($item[1]) ? floatval($item[1]) : 0;
@@ -55,7 +68,7 @@ class PriceProcessor{
                // Make a totalProfit  in CAD based on the usd value on totalProfitUSD and the cad value on the constructor
                $totalProfitCAD = number_format($totaProfitUSD * $this->cad,2,'.','');
 
-               if ($sku == "N/A"){
+               if ($sku == "N/A" || $cost == 0 || $price == 0 || $qty == "N/A"){
                     continue;
                }
 
@@ -64,29 +77,68 @@ class PriceProcessor{
                echo "<td>$cost</td>";
                echo "<td>$price</td>";
                echo "<td>$qty</td>";
-
                echo "<td>$profitMarginCalc</td>";
                echo "<td>$totaProfitUSD</td>";
                echo "<td>$totalProfitCAD</td>";
                echo "</tr>";
+
+               $theTable .= "<tbody>";
+               array_push($priceAv, $price);
+               array_push($profitMarginAv, $profitMarginCalc);
+               array_push($qtyTotal, $qty);
+               array_push($profitTotal, $totaProfitUSD);
+               array_push($profitTotalCAD, $totalProfitCAD);
+
+      
           }
+          // footer
+          echo "<tfoot>";
+          // get the $count and loop it to make a table row
+          echo "<tr>";
+          echo "<td>Total number of items: $count</td>";
+          // get sum of $priceAv
+          echo "<td> Average price: " . number_format(array_sum($priceAv) / count($priceAv),2,'.','') . "</td>";
+          echo "<td> Total quantity: " . array_sum($qtyTotal) . "</td>";
+          echo "<td> Average profit margin: " . number_format(array_sum($profitMarginAv) / count($profitMarginAv),2,'.','') . "</td>";
+          echo "<td> Total profit: " . number_format(array_sum($profitTotal),2,'.','') . "</td>";
+          echo "<td> Total profit in CAD: " . number_format(array_sum($profitTotalCAD),2,'.','') . "</td>";
+
+
+
+
+
+
+          
+        // sum all   
+
+echo "</tr>";
+     
+
+    
+echo "</tfoot>";
           echo "</table>";
 
           echo $theTable;
+          
   
 }
 }
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
      <meta charset="UTF-8">
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <link rel="stylesheet" href="style.css">
+ 
+     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
      <title>Document</title>
+ 
      <?php 
-          $priceProcessor = new PriceProcessor('sample.csv',0.5,1.35);
+          $priceProcessor = new PriceProcessor('sample.csv' , 1.3);
           $priceProcessor->processFile();
      ?>
 </head>
