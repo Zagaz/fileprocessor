@@ -95,23 +95,34 @@ class PriceProcessor{
           echo "<tfoot>";
           // get the $count and loop it to make a table row
           echo "<tr>";
-          echo "<td>Total number of items: $count</td>";
-          // get sum of $priceAv
-          echo "<td> Average price: " . number_format(array_sum($priceAv) / count($priceAv),2,'.','') . "</td>";
-          echo "<td> Total quantity: " . array_sum($qtyTotal) . "</td>";
-          echo "<td> Average profit margin: " . number_format(array_sum($profitMarginAv) / count($profitMarginAv),2,'.','') . "</td>";
-          echo "<td> Total profit: " . number_format(array_sum($profitTotal),2,'.','') . "</td>";
-          echo "<td> Total profit in CAD: " . number_format(array_sum($profitTotalCAD),2,'.','') . "</td>";
+          echo "<td> </td>";
+          echo "<td>  </td>";
+          echo "<td> Avegare Price:  </td>";
+          echo "<td>Total QTY  </td>";
+          echo "<td> Average profit margin </td>";
+          echo "<td> Total profit USD </td>";
+          echo "<td> Total profit in CAD: </td>";
 
+          echo "</tr>";
+          echo "<tr>";
+          // sku
+          // 22222
+                    echo "<td></td>";
+                    //Cost
+                    echo "<td></td>";
+                    // price average
+                    echo "<td> <strong>" . number_format(array_sum($priceAv) / count($priceAv),2,'.','') . " </strong> </td>";
+               
+                    //qty
+                    echo "<td> <strong>" . array_sum($qtyTotal) . " </strong>  </td>";
+                    // profit margin
+                    echo "<td> <strong> " . number_format(array_sum($profitMarginAv) / count($profitMarginAv),2,'.','') . " </strong> </td>";
+                    // total profit
+                    echo "<td> <strong> USD " . number_format(array_sum($profitTotal),2,'.','') . " </strong> </td>";
+                    // total profit in CAD
+                    echo "<td> <strong> CAD " . number_format(array_sum($profitTotalCAD),2,'.','') . " </strong> </td>";
 
-
-
-
-
-          
-        // sum all   
-
-echo "</tr>";
+          echo "</tr>";
      
 
     
