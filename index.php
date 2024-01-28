@@ -71,14 +71,21 @@ class PriceProcessor{
                if ($sku == "N/A" || $cost == 0 || $price == 0 || $qty == "N/A"){
                     continue;
                }
+          // QTY, profit margin, and total profit have the possibility to be negative. If these values are negative output the values as red. If positive, green.
+          $qtyClass = $qty < 0 ? "text-danger" : "text-success";
+          $profitMarginClass = $profitMarginCalc <= 0 ? "text-danger" : "text-success";
+          $totalProfitClass = $totaProfitUSD <= 0 ? "text-danger" : "text-success";
+
+
+
 
                echo "<tr>";
                echo "<td>$sku</td>";
                echo "<td>$cost</td>";
                echo "<td>$price</td>";
-               echo "<td>$qty</td>";
-               echo "<td>$profitMarginCalc</td>";
-               echo "<td>$totaProfitUSD</td>";
+               echo "<td class = $qtyClass >$qty</td>";
+               echo "<td class = $profitMarginClass> $profitMarginCalc</td>";
+               echo "<td class = $totalProfitClass> $totaProfitUSD</td>";
                echo "<td>$totalProfitCAD</td>";
                echo "</tr>";
 
