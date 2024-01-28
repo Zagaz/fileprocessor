@@ -6,18 +6,24 @@ class PriceProcessor
 
      private $cad;
 
-     // constructor
+     /*
+     * @param string $csvFilePath
+     * - The path to the CSV file
+     * @param float $cad
+     * - The exchange rate between USD and CAD
+     * - The 'FREE' APIs were asking for a credit card, so instead of using an API I just used a static value.
+     */
      public function __construct($csvFilePath,  $cad)
      {
           $this->csvFilePath = $csvFilePath;
-
+          // The "FREE" API's were asking for a credit card, so intead of using an API I just used a static value.
           $this->cad = $cad;
      }
 
-
-
-
-
+     /*
+     * @return void
+     * - This function will process the CSV file and output the data in a table
+     */
      public function processFile()
      {
           // open the file and make a table with it
@@ -28,9 +34,9 @@ class PriceProcessor
           }
           fclose($file);
 
+          // The table starts here....
+
           echo "<table class =  'table table-striped'>";
-          // print_r($table);
-          // get table first item and make a table row
           echo '<thead>';
           echo "<tr>";
           foreach ($table[0] as $item) {
@@ -45,19 +51,16 @@ class PriceProcessor
           echo '</thead>';
 
           // with each data from $data array make a table row
-
           $theTable = "<tbody class ='table-striped' >";
 
-?>
-
-<?php
           // To be used for the footer calculations
           $priceAv = [];
           $profitMarginAv = [];
           $qtyTotal = [];
           $profitTotal = [];
           $profitTotalCAD = [];
-          
+
+          // The table body starts here....
           foreach ($data as $item) {
                $sku = isset($item[0]) ? $item[0] : "N/A";
                $cost = isset($item[1]) ? floatval($item[1]) : 0;
@@ -66,6 +69,7 @@ class PriceProcessor
                
                $profitMarginCalc = floatval($price) - floatval($cost);
                $totaProfitUSD = number_format($profitMarginCalc + $cost, 2, '.', '');
+               // The "FREE" API's were asking for a credit card, so intead of using an API I just used a static value.
                $totalProfitCAD = number_format($totaProfitUSD * $this->cad, 2, '.', '');
 
                if ($sku == "N/A" || $cost == 0 || $price == 0 || $qty == "N/A") {
@@ -93,10 +97,13 @@ class PriceProcessor
                array_push($profitTotal, $totaProfitUSD);
                array_push($profitTotalCAD, $totalProfitCAD);
           }
-          // footer
+  
+
+          echo "</tbody>";         // The table body ends here....
+
+          // The table footer starts here....
           echo "<tfoot>";
           // Footer: Average Price, total qty, average profit margin, total profit (USD), total profit (CAD).
-
           echo "<tr>";
           echo "<td> </td>";
           echo "<td>  </td>";
@@ -130,9 +137,11 @@ class PriceProcessor
           // total profit in CAD
           echo "<td class = '$totalAverageProfitCAD'> <strong> CAD " . number_format(array_sum($profitTotalCAD), 2, '.', '') . " </strong> </td>";
           echo "</tr>";
-          echo "</tfoot>";
+          echo "</tfoot>"; // The table footer ends here....
           echo "</table>";
+          // The table ends here....
 
+         // And here is where the magic happens. 
           echo $theTable;
      }
 }
