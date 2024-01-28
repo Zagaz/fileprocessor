@@ -69,6 +69,7 @@ class PriceProcessor
                
                $profitMarginCalc = floatval($price) - floatval($cost);
                $totaProfitUSD = number_format($profitMarginCalc + $cost, 2, '.', '');
+               // The "FREE" API's were asking for a credit card, so intead of using an API I just used a static value.
                $totalProfitCAD = number_format($totaProfitUSD * $this->cad, 2, '.', '');
 
                if ($sku == "N/A" || $cost == 0 || $price == 0 || $qty == "N/A") {
